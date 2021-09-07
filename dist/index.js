@@ -40,9 +40,9 @@ const github_1 = __nccwpck_require__(438);
 function run() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const source = core.getInput('source-branch');
-        const target = core.getInput('target-branch');
-        const token = core.getInput('token');
+        const source = core.getInput('source-branch', { required: true });
+        const target = core.getInput('target-branch', { required: true });
+        const token = core.getInput('token', { required: true });
         const title = (_a = core.getInput('title')) !== null && _a !== void 0 ? _a : `sync: merge ${target} into ${source}`;
         const { owner, repo } = github_1.context.repo;
         const github = github_1.getOctokit(token).rest;

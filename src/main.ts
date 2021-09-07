@@ -2,9 +2,9 @@ import * as core from '@actions/core'
 import {getOctokit, context} from '@actions/github'
 
 async function run(): Promise<void> {
-  const source = core.getInput('source-branch')
-  const target = core.getInput('target-branch')
-  const token = core.getInput('token')
+  const source = core.getInput('source-branch', {required: true})
+  const target = core.getInput('target-branch', {required: true})
+  const token = core.getInput('token', {required: true})
   const title = core.getInput('title') ?? `sync: merge ${target} into ${source}`
 
   const {owner, repo} = context.repo
