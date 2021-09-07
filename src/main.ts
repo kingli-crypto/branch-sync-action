@@ -5,7 +5,7 @@ async function run(): Promise<void> {
   const source = core.getInput('source-branch', {required: true})
   const target = core.getInput('target-branch', {required: true})
   const token = core.getInput('token', {required: true})
-  const title = core.getInput('title') ?? `sync: merge ${target} into ${source}`
+  const title = `sync: merge ${target} into ${source}`
 
   const {owner, repo} = context.repo
   const github = getOctokit(token).rest
