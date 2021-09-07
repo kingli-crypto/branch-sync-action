@@ -1,11 +1,15 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Branch sync action'
+description: 'GitHub action to automatically create PR to sync two branch, for all our crazy pipeline needs'
+author: 'King Li'
 inputs:
-  milliseconds: # change this
+  source-branch:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  target-branch:
+    required: true
+  token:
+    required: true
+  title:
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'

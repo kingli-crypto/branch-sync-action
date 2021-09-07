@@ -1,19 +1,38 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import {getOctokit, context} from '@actions/github'
 
 async function run(): Promise<void> {
-  try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+  const source = core.getInput('source-branch')
+  const target = core.getInput('target-branch')
+  const token = core.getInput('token')
+  const title = core.getInput('title') ?? `sync: merge ${target} into ${source}`
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+  const {owner, repo} = context.repo
+  const github = getOctokit(token).rest
 
-    core.setOutput('time', new Date().toTimeString())
-  } catch (error) {
-    core.setFailed(error.message)
+  // Look for any open PR matching the pair
+  const existing = await github.pulls.list({
+    owner,
+    repo,
+    head: `${owner}:${source}`,
+    target,
+    state: 'open'
+  })
+  if (existing.data.length !== 0) {
+    core.info(`PR already exists for this source/target pair`)
+    core.info(`PR details: ${existing.data[0].url}`)
+
+    return
   }
+
+  // Do perform creation
+  await github.pulls.create({
+    owner,
+    repo,
+    head: source,
+    base: target,
+    title
+  })
 }
 
 run()
